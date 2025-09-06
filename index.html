@@ -3,78 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baby Poop Guide - Email Confirmation</title>
+    <title>Baby Poop Guide - Email Redirect</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; background: #f8f9fa; }
-        .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .button { background: #007AFF; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 20px 0; }
-        .fallback { margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 8px; }
-        .code { background: #e9ecef; padding: 8px 12px; border-radius: 4px; font-family: monospace; word-break: break-all; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 64px;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #007AFF;
+            margin: 0;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin: 10px 0 30px 0;
+        }
+        
+        .button {
+            background: #007AFF;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: 600;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+        
+        .button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+        }
+        
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .fallback {
+            margin-top: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .fallback h3 {
+            color: #495057;
+            margin-top: 0;
+        }
+        
+        .instructions {
+            text-align: left;
+            margin: 20px 0;
+        }
+        
+        .instructions li {
+            margin: 10px 0;
+        }
+        
+        .token-code {
+            background: #e9ecef;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            word-break: break-all;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+            font-size: 14px;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007AFF;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                margin: 20px auto;
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div style="font-size: 48px; margin-bottom: 20px;">🍼</div>
-        <h1>Baby Poop Guide</h1>
-        <h2 id="pageTitle">Email Confirmation</h2>
+        <div class="header">
+            <div class="logo">🍼</div>
+            <h1 class="title">Baby Poop Guide</h1>
+            <p class="subtitle" id="pageSubtitle">Processing your request...</p>
+        </div>
         
-        <p id="pageDescription">Click the button below to confirm your email:</p>
+        <div id="statusMessage" class="status loading">
+            <div class="spinner"></div>
+            Validating your reset link...
+        </div>
         
-        <a href="#" id="openAppBtn" class="button">📱 Open App</a>
+        <button id="actionButton" class="button" style="display: none;">
+            🔐 Open App
+        </button>
         
-        <div class="fallback">
-            <h3>App Not Opening?</h3>
-            <p>Copy this link and paste it in your mobile browser:</p>
-            <div class="code" id="deepLink" onclick="copyToClipboard()" style="cursor: pointer;"></div>
-            <small>Tap to copy</small>
+        <div id="fallbackSection" class="fallback" style="display: none;">
+            <h3>📱 Manual Steps</h3>
+            <div class="instructions">
+                <p><strong>If the app doesn't open automatically:</strong></p>
+                <ol>
+                    <li>Make sure the <strong>Baby Poop Guide</strong> app is installed</li>
+                    <li>Open the app manually</li>
+                    <li>Go to <strong>Login → Forgot Password → Enter Code</strong></li>
+                    <li>Enter this reset code:</li>
+                </ol>
+                <div class="token-code" id="tokenDisplay">
+                    <!-- Token will be inserted here -->
+                </div>
+                <p><strong>Or copy this deep link:</strong></p>
+                <div class="token-code" id="deepLinkDisplay">
+                    <!-- Deep link will be inserted here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Security Notice:</strong> This link expires in 24 hours.
+        </div>
+        
+        <div class="footer">
+            <p><strong>Baby Poop Guide Team</strong></p>
+            <p>If you didn't request this reset, please ignore this link.</p>
         </div>
     </div>
 
     <script>
+        // Parse URL parameters
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
             return {
-                token: params.get('token'),
+                token: params.get('token') || params.get('access_token') || params.get('recovery_token'),
                 email: params.get('email'),
-                type: params.get('type') || 'signup'
+                type: params.get('type') || 'recovery'
             };
         }
-
+        
+        // Update UI elements
+        function updateUI(type, message, showButton = false, showFallback = false) {
+            const statusEl = document.getElementById('statusMessage');
+            const buttonEl = document.getElementById('actionButton');
+            const fallbackEl = document.getElementById('fallbackSection');
+            const subtitleEl = document.getElementById('pageSubtitle');
+            
+            statusEl.className = `status ${type}`;
+            statusEl.innerHTML = message;
+            
+            if (showButton) {
+                buttonEl.style.display = 'inline-block';
+            }
+            
+            if (showFallback) {
+                fallbackEl.style.display = 'block';
+            }
+            
+            // Update subtitle based on type
+            if (type === 'success') {
+                subtitleEl.textContent = 'Reset Your Password';
+            } else if (type === 'error') {
+                subtitleEl.textContent = 'Something Went Wrong';
+            }
+        }
+        
+        // Generate deep link
+        function generateDeepLink(params) {
+            const baseUrl = 'com.gaukhar.poopguide://auth/confirm';
+            const queryParams = new URLSearchParams({
+                type: params.type,
+                token: params.token  // Use 'token' parameter to match app expectation
+            });
+            
+            if (params.email) {
+                queryParams.append('email', params.email);
+            }
+            
+            return `${baseUrl}?${queryParams.toString()}`;
+        }
+        
+        // Attempt to open the app
+        function attemptToOpenApp(deepLink) {
+            console.log('🚀 Attempting to open app with:', deepLink);
+            
+            updateUI('loading', '⏳ Opening Baby Poop Guide app...', false, false);
+            
+            // Method 1: Direct navigation (iOS Safari)
+            window.location.href = deepLink;
+            
+            // Method 2: Invisible iframe fallback
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = deepLink;
+            document.body.appendChild(iframe);
+            
+            // Clean up iframe
+            setTimeout(() => {
+                if (iframe.parentNode) {
+                    iframe.parentNode.removeChild(iframe);
+                }
+            }, 2000);
+            
+            // Show success and fallback after delay
+            setTimeout(() => {
+                updateUI('success', '✅ App should be opening now!', true, true);
+                
+                const button = document.getElementById('actionButton');
+                button.onclick = () => attemptToOpenApp(deepLink);
+            }, 3000);
+        }
+        
+        // Initialize the page
         function initializePage() {
             const params = getUrlParams();
             
+            console.log('🔍 URL Params:', params);
+            
+            // Validate required parameters
             if (!params.token) {
-                document.getElementById('pageDescription').innerHTML = '❌ Invalid link. Please try again.';
+                updateUI('error', '❌ Invalid or missing reset token. Please request a new password reset.');
                 return;
             }
-
-            const deepLinkUrl = `com.gaukhar.poopguide://auth/confirm?type=${params.type}&access_token=${params.token}&email=${encodeURIComponent(params.email || '')}`;
             
-            // Update UI based on type
-            if (params.type === 'recovery') {
-                document.getElementById('pageTitle').textContent = 'Password Reset';
-                document.getElementById('pageDescription').textContent = 'Click the button below to reset your password:';
-                document.getElementById('openAppBtn').innerHTML = '🔐 Reset Password';
+            if (params.token.length < 10) {
+                updateUI('error', '❌ Invalid token format. Please request a new password reset.');
+                return;
             }
             
-            document.getElementById('deepLink').textContent = deepLinkUrl;
-            document.getElementById('openAppBtn').onclick = function(e) {
-                e.preventDefault();
-                window.location.href = deepLinkUrl;
-            };
-
-            // Auto-attempt on mobile
-            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                setTimeout(() => window.location.href = deepLinkUrl, 1500);
+            // Generate deep link
+            const deepLink = generateDeepLink(params);
+            
+            // Display token and deep link for manual entry
+            document.getElementById('tokenDisplay').textContent = params.token;
+            document.getElementById('deepLinkDisplay').textContent = deepLink;
+            
+            // Show initial success state
+            setTimeout(() => {
+                updateUI('success', '🔗 Reset link validated successfully!', true, false);
+                
+                // Set up button
+                const button = document.getElementById('actionButton');
+                button.onclick = () => attemptToOpenApp(deepLink);
+                
+                // Auto-attempt after 2 seconds
+                setTimeout(() => {
+                    attemptToOpenApp(deepLink);
+                }, 2000);
+            }, 1500);
+        }
+        
+        // Handle different link types
+        function handleLinkType() {
+            const params = getUrlParams();
+            const logoEl = document.querySelector('.logo');
+            const subtitleEl = document.getElementById('pageSubtitle');
+            const buttonEl = document.getElementById('actionButton');
+            
+            if (params.type === 'signup' || params.type === 'confirmation' || params.type === 'email_confirmation') {
+                // Email confirmation flow
+                subtitleEl.textContent = 'Confirm Your Email';
+                logoEl.textContent = '✉️';
+                logoEl.style.color = '#28a745'; // Green for success
+                buttonEl.innerHTML = '✅ Open App to Complete Registration';
+                
+                // Update page title
+                document.title = 'Baby Poop Guide - Email Confirmation';
+                
+            } else if (params.type === 'recovery' || params.type === 'password_reset') {
+                // Password reset flow
+                subtitleEl.textContent = 'Reset Your Password';
+                logoEl.textContent = '🔐';
+                logoEl.style.color = '#007AFF'; // Blue for reset
+                buttonEl.innerHTML = '🔐 Open App to Reset Password';
+                
+                // Update page title
+                document.title = 'Baby Poop Guide - Password Reset';
+                
+            } else {
+                // Unknown/default flow
+                subtitleEl.textContent = 'Authentication';
+                logoEl.textContent = '🔗';
+                logoEl.style.color = '#6c757d'; // Gray for unknown
+                buttonEl.innerHTML = '📱 Open App';
+                
+                document.title = 'Baby Poop Guide - Authentication';
             }
         }
-
-        function copyToClipboard() {
-            const text = document.getElementById('deepLink').textContent;
-            navigator.clipboard.writeText(text).then(() => alert('Link copied!'));
-        }
-
-        document.addEventListener('DOMContentLoaded', initializePage);
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            handleLinkType();
+            initializePage();
+        });
+        
+        // Handle page visibility changes (user switching back to browser)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // User came back to browser - app might not have opened
+                setTimeout(() => {
+                    const fallbackEl = document.getElementById('fallbackSection');
+                    if (fallbackEl.style.display === 'none') {
+                        updateUI('success', '📱 Having trouble? Try the manual steps below.', true, true);
+                    }
+                }, 1000);
+            }
+        });
     </script>
 </body>
 </html>
